@@ -26,12 +26,21 @@ public class BlogController {
     public List<Blog> getBlogs(){
         return blogService.getBlogs();
     }
-
-    @PutMapping("/api/blogs/{id}")
-    public Long updateBlog(@PathVariable Long id,Long password, @RequestBody BlogRequestDto requestDto){
-        return blogService.update(id,password,requestDto);
+    
+    @GetMapping("/api/getone")
+    public Blog getone(@PathVariable Long id){
+        return blogService.getOne(id);
     }
 
+    @PutMapping("/api/blogs/{id}")
+    public Long updateBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto){
+        return blogService.update(id,requestDto);
+    }
 
+    @DeleteMapping("/api/blogs/{id}")
+    public Long deleteBlog(@PathVariable Long id,@RequestBody BlogRequestDto requestDto){
+        return blogService.deleteBlog(id,requestDto);
+    }
+    
 
 }

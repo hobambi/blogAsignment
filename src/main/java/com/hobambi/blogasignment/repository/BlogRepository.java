@@ -11,6 +11,5 @@ import java.util.Optional;
 public interface BlogRepository extends JpaRepository<Blog, Long> {
     List<Blog> findAllByOrderByModifiedAtDesc();
     Blog findByIdAndPassword(Long id, Long password);
-
 }
 

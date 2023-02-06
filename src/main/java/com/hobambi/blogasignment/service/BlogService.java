@@ -15,7 +15,6 @@ import java.util.List;
 public class BlogService {
     private final BlogRepository blogRepository;
 
-
     @Transactional
     public Blog createBlog(BlogRequestDto requestDto) {
         Blog blog = new Blog(requestDto);
@@ -28,15 +27,41 @@ public class BlogService {
         return blogRepository.findAllByOrderByModifiedAtDesc();
     }
 
-    /////////////////update 미완성/////////////////////////
     @Transactional
-    public Long update(Long id, Long password, BlogRequestDto requestDto) {
+    public Blog getOne(Long id){
+        return blogRepository.findById(id).orElseThrow(
+                ()-> new IllegalArgumentException("아이디가 존재하지 않습니다.")
+        );
+    }
+
+    ///////////////update 미완성/////////////////////////
+    @Transactional
+    public Long update(Long id, BlogRequestDto requestDto) {
         Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
-        if(!password.equals(blog.getPassword()))
-            new IllegalArgumentException("비밀번호가 일치 하지 않습니다");
-        else blog.update(requestDto);
+
+        if (requestDto.getPassword().equals(blog.getPassword()))
+            blog.update(requestDto);
+        else {
+            System.out.println("비밀번호 틀렸지롱");
+            return (long) -1;
+        }
+
+        return blog.getId();
+    }
+
+
+    public Long deleteBlog(Long id, BlogRequestDto requestDto) {
+        Blog blog = blogRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
+        );
+        if (requestDto.getPassword().equals(blog.getPassword()))
+            blogRepository.deleteById(id);
+        else {
+            System.out.println("비밀번호 틀렸지롱");
+            return (long) -1;
+        }
         return blog.getId();
     }
 }
