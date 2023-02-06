@@ -28,5 +28,15 @@ public class BlogService {
         return blogRepository.findAllByOrderByModifiedAtDesc();
     }
 
-
+    /////////////////update 미완성/////////////////////////
+    @Transactional
+    public Long update(Long id, Long password, BlogRequestDto requestDto) {
+        Blog blog = blogRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
+        );
+        if(!password.equals(blog.getPassword()))
+            new IllegalArgumentException("비밀번호가 일치 하지 않습니다");
+        else blog.update(requestDto);
+        return blog.getId();
+    }
 }
