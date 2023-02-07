@@ -1,6 +1,7 @@
 package com.hobambi.blogasignment.service;
 
 import com.hobambi.blogasignment.dto.BlogRequestDto;
+import com.hobambi.blogasignment.dto.BlogResponseDto;
 import com.hobambi.blogasignment.entity.Blog;
 
 import com.hobambi.blogasignment.repository.BlogRepository;
@@ -22,37 +23,37 @@ public class BlogService {
         return blog;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Blog> getBlogs() {
         return blogRepository.findAllByOrderByModifiedAtDesc();
     }
 
-    @Transactional
-    public Blog getOne(Long id){
-        return blogRepository.findById(id).orElseThrow(
-                ()-> new IllegalArgumentException("아이디가 존재하지 않습니다.")
-        );
+    @Transactional(readOnly = true)
+    public BlogResponseDto getOne(Long id){
+        Blog blog = blogRepository.findById(id).orElseThrow(
+                ()-> new IllegalArgumentException("아이디가 존재하지 않습니다."));
+        BlogResponseDto blogResponseDto = new BlogResponseDto(blog);
+        return blogResponseDto;
     }
 
-    ///////////////update 미완성/////////////////////////
     @Transactional
-    public Long update(Long id, BlogRequestDto requestDto) {
+    public BlogResponseDto update(Long id, BlogRequestDto requestDto) {
         Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
-
-        if (requestDto.getPassword().equals(blog.getPassword()))
+        if (requestDto.getPassword().equals(blog.getPassword())) {
             blog.update(requestDto);
+        }
         else {
             System.out.println("비밀번호 틀렸지롱");
-            return (long) -1;
         }
-
-        return blog.getId();
+        BlogResponseDto blogResponseDto = new BlogResponseDto(blog);
+        return blogResponseDto;
     }
 
-
-    public Long deleteBlog(Long id, BlogRequestDto requestDto) {
+    //삭제 성공시 1반환, 비밀번호 틀리면 -1 반환
+    @Transactional
+    public int deleteBlog(Long id, BlogRequestDto requestDto) {
         Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
@@ -60,8 +61,9 @@ public class BlogService {
             blogRepository.deleteById(id);
         else {
             System.out.println("비밀번호 틀렸지롱");
-            return (long) -1;
+            return -1;
         }
-        return blog.getId();
+        return 1;
     }
+
 }

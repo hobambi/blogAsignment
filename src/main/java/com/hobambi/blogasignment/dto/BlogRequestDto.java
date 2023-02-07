@@ -9,3 +9,4 @@ public class BlogRequestDto {
    private String title;
    private String contents;
 }
+

@@ -1,6 +1,7 @@
 package com.hobambi.blogasignment.Controller;
 
 import com.hobambi.blogasignment.dto.BlogRequestDto;
+import com.hobambi.blogasignment.dto.BlogResponseDto;
 import com.hobambi.blogasignment.entity.Blog;
 import com.hobambi.blogasignment.service.BlogService;
 import lombok.RequiredArgsConstructor;
@@ -27,20 +28,19 @@ public class BlogController {
         return blogService.getBlogs();
     }
     
-    @GetMapping("/api/getone")
-    public Blog getone(@PathVariable Long id){
+    @GetMapping("/api/getone/{id}")
+    public BlogResponseDto getOne(@PathVariable Long id){
         return blogService.getOne(id);
     }
 
     @PutMapping("/api/blogs/{id}")
-    public Long updateBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto){
+    public BlogResponseDto updateBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto){
         return blogService.update(id,requestDto);
     }
 
     @DeleteMapping("/api/blogs/{id}")
-    public Long deleteBlog(@PathVariable Long id,@RequestBody BlogRequestDto requestDto){
+    public int deleteBlog(@PathVariable Long id,@RequestBody BlogRequestDto requestDto){
         return blogService.deleteBlog(id,requestDto);
     }
-    
 
 }
