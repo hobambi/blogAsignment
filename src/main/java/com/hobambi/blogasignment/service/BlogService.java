@@ -17,16 +17,25 @@ public class BlogService {
     private final BlogRepository blogRepository;
 
     @Transactional
-    public Blog createBlog(BlogRequestDto requestDto) {
+    public BlogResponseDto createBlog(BlogRequestDto requestDto) {
         Blog blog = new Blog(requestDto);
         blogRepository.save(blog);
-        return blog;
+        BlogResponseDto blogResponseDto = new BlogResponseDto(blog);
+        return blogResponseDto;
     }
 
-    @Transactional(readOnly = true)
+        @Transactional(readOnly = true)
     public List<Blog> getBlogs() {
         return blogRepository.findAllByOrderByModifiedAtDesc();
     }
+
+
+//    @Transactional(readOnly = true)
+//    public List<BlogResponseDto> getBlogs() {
+//       List<BlogResponseDto> blogResponseDtos= blogRepository.findAllByOrderByModifiedAtDesc();
+//
+//        return blogResponseDtos;
+//    }
 
     @Transactional(readOnly = true)
     public BlogResponseDto getOne(Long id){

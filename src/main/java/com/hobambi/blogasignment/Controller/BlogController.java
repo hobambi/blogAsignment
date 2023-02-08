@@ -19,7 +19,7 @@ public class BlogController {
     public ModelAndView home(){return new ModelAndView("index");}
 
     @PostMapping("/api/blogs")
-    public Blog createBlog(@RequestBody BlogRequestDto requestDto){
+    public BlogResponseDto createBlog(@RequestBody BlogRequestDto requestDto){
         return blogService.createBlog(requestDto);
     }
 
