@@ -1,5 +1,6 @@
 package com.hobambi.blogasignment.service;
 
+import com.hobambi.blogasignment.ErrorTest.JsonException;
 import com.hobambi.blogasignment.dto.BlogRequestDto;
 import com.hobambi.blogasignment.dto.BlogResponseDto;
 import com.hobambi.blogasignment.entity.Blog;
@@ -60,8 +61,25 @@ public class BlogService {
         return blogResponseDto;
     }
 
+
+
     //삭제 성공시 1반환, 비밀번호 틀리면 -1 반환
     @Transactional
+    public int deleteBlog(Long id, BlogRequestDto requestDto) {
+        Blog blog = blogRepository.findById(id).orElseThrow(
+                () -> new JsonException("아이디가 존재하지 않습니다.")
+        );
+        if (requestDto.getPassword().equals(blog.getPassword()))
+            blogRepository.deleteById(id);
+        else {
+            System.out.println("비밀번호 틀렸지롱");
+            return -1;
+        }
+        return 1;
+    }
+
+    /*
+        @Transactional
     public int deleteBlog(Long id, BlogRequestDto requestDto) {
         Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
@@ -74,5 +92,6 @@ public class BlogService {
         }
         return 1;
     }
+     */
 
 }

@@ -15,12 +15,22 @@ public class BlogResponseDto {
     private String title;
     private String contents;
 
+    private String message;
+
     public BlogResponseDto(Blog blog) {
         this.id = blog.getId();
         this.username = blog.getUsername();
         this.password = blog.getPassword();
         this.title = blog.getTitle();
         this.contents = blog.getContents();
+
+    }
+    public BlogResponseDto(String message){
+        this.message = message;
+    }
+
+    public static BlogResponseDto errorDto(String message) {
+        return new BlogResponseDto(message);
     }
 
 //    public BlogResponseDto(List<Blog>blogList){
