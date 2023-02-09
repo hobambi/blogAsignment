@@ -13,7 +13,6 @@ public class BlogResponseDto {
     private String title;
     private String contents;
 
-
     public BlogResponseDto(Blog blog) {
         this.id = blog.getId();
         this.username = blog.getUsername();
