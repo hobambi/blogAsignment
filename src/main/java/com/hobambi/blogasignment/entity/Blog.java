@@ -6,12 +6,13 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+// db테이블을 만들어요
 @Getter
 @Entity
 @NoArgsConstructor
 public class Blog extends Timestamped {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id // 당신은 pk입니다
+    @GeneratedValue(strategy = GenerationType.AUTO) // 자동으로 생성해주세요
     private Long id;
 
     @Column(nullable = false)
@@ -39,8 +40,6 @@ public class Blog extends Timestamped {
         this.password = requestDto.getPassword();
         this.contents = requestDto.getContents();
     }
-    public void delete(BlogRequestDto requestDto) {
-        this.password = requestDto.getPassword();
-    }
+
 
 }
