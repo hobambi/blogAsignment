@@ -9,6 +9,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
+// 작성 시간과 수정 시간을 넣어줍시다
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
