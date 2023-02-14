@@ -15,11 +15,11 @@ public class Blog extends Timestamped {
     @GeneratedValue(strategy = GenerationType.AUTO) // 자동으로 생성해주세요
     private Long id;
 
-    @Column(nullable = false)
-    private String username;
-
-    @Column(nullable = false)
-    private String password;
+//    @Column(nullable = false)
+//    private String username;
+//
+//    @Column(nullable = false)
+//    private String password;
 
     @Column(nullable = false)
     private String title;
@@ -27,19 +27,31 @@ public class Blog extends Timestamped {
     @Column(nullable = false)
     private String contents;
 
+    @ManyToOne
+    @JoinColumn(name="username")
+    private User user;
+
     public Blog(BlogRequestDto requestDto) {
         this.title = requestDto.getTitle();
-        this.username = requestDto.getUsername();
-        this.password = requestDto.getPassword();
+//        this.username = requestDto.getUsername();
+//        this.password = requestDto.getPassword();
         this.contents = requestDto.getContents();
+    }
+
+    public Blog(BlogRequestDto blogRequestDto, User userid) {
+        this.title = blogRequestDto.getTitle();
+        this.contents = blogRequestDto.getContents();
+        this.user =userid;
     }
 
     public void update(BlogRequestDto requestDto) {
         this.title = requestDto.getTitle();
-        this.username = requestDto.getUsername();
-        this.password = requestDto.getPassword();
+//        this.username = requestDto.getUsername();
+//        this.password = requestDto.getPassword();
         this.contents = requestDto.getContents();
     }
 
-
+    public String getUsername() {
+        return user.getUsername();
+    }
 }

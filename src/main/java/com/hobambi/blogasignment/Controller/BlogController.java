@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.BindException;
 import java.util.List;
 
@@ -23,8 +24,8 @@ public class BlogController {
 
     // 게시글 작성
     @PostMapping("/api/blogs")
-    public BlogResponseDto createBlog(@RequestBody BlogRequestDto requestDto) {
-        return blogService.createBlog(requestDto);
+    public ApiResult<BlogResponseDto> createBlog(@RequestBody BlogRequestDto requestDto, HttpServletRequest request) {
+        return blogService.createBlog(requestDto,request);
     }
 
     // 전체 게시글 목록 조회

@@ -15,4 +15,9 @@ public class ApiResult<T>{
         this.message = message;
     }
 
+    public ApiResult(String message){
+        this.message = message;
+        this.result = (T) "실패실패";
+    }
+
 }
