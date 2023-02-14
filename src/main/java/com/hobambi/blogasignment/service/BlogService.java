@@ -75,16 +75,33 @@ public ApiResult<BlogResponseDto> getOne(Long id) {
 
     // 게시글 수정
     @Transactional
-    public ApiResult<BlogResponseDto> update(Long id, BlogRequestDto requestDto) {
+    public ApiResult<BlogResponseDto> update(Long id, BlogRequestDto blogRequestDto, HttpServletRequest request) {
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+        User user = null;
+        if(token != null){
+            if(jwtUtil.validateToken(token)){
+                claims = jwtUtil.getUserInfoFromToken(token);
+            }else {
+                throw new IllegalArgumentException("유효한 토큰이 아닙니다. headers Authorization 확인해보세요");
+            }
+            user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    ()-> new IllegalArgumentException("유효한 토큰은 있는데 username이 없네요?")
+            );
+        }else {
+            new IllegalArgumentException("당신은 토큰이 없네요ㅠ 로그인하세요");
+        }
+
         Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-        String message = checkPassword(requestDto, blog, "수정");
+        String message = checkPassword(blogRequestDto, blog, "수정");
         if (message.equals("수정 성공")) {
-            blog.update(requestDto);
+            blog.update(blogRequestDto);
         }
         BlogResponseDto blogResponseDto = new BlogResponseDto(blog);
         return new ApiResult<>(blogResponseDto, message);
     }
+
 
     // 게시글 삭제
     @Transactional

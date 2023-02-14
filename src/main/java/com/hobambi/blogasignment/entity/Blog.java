@@ -21,8 +21,8 @@ public class Blog extends Timestamped {
     @Column(nullable = false)
     private String contents;
 
-    @Column(nullable = false)
-    private String username;
+//    @Column(nullable = false)
+//    private String username;
 
     @ManyToOne
     @JoinColumn(name="userid")
@@ -39,8 +39,8 @@ public class Blog extends Timestamped {
     public Blog(BlogRequestDto blogRequestDto, User user) {
         this.title = blogRequestDto.getTitle();
         this.contents = blogRequestDto.getContents();
-        this.user =user;
-        this.username = user.getUsername();
+        this.user = user;
+//        this.username = user.getUsername();
     }
 
     public void update(BlogRequestDto requestDto) {
@@ -50,7 +50,7 @@ public class Blog extends Timestamped {
         this.contents = requestDto.getContents();
     }
 
-    public String getUsername() {
-        return user.getUsername();
-    }
+//    public String getUsername() {
+//        return user.getUsername();
+//    }
 }
