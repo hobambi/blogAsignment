@@ -42,7 +42,7 @@ public class BlogController {
 
     // 선택한 게시글 수정
     @PutMapping("/api/blogs/{id}")
-    public ApiResult<BlogResponseDto> updateBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto) throws BindException {
+    public ApiResult<BlogResponseDto> updateBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto) {
         return blogService.update(id, requestDto);
     }
 

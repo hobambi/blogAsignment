@@ -43,7 +43,6 @@ public class BlogService {
             user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("당신은 어떻게 유효한 토큰은 있는데 username이 없죠??")
             );
-
         } else {
             new IllegalArgumentException("당신은 토큰이 없네요ㅠ 로그인하세요");
         }
@@ -65,20 +64,20 @@ public class BlogService {
         return new ApiResult<>(blogResponseDtos, "조회 성공");
     }
 
-    // 선택한 게시글 조회
-    @Transactional(readOnly = true)
-    public ApiResult<BlogResponseDto> getOne(Long id) {
-        Blog blog = blogRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
-        BlogResponseDto blogResponseDto = new BlogResponseDto(blog);
-        return new ApiResult<>(blogResponseDto, "조회 성공");
-    }
+// 선택한 게시글 조회
+@Transactional(readOnly = true)
+public ApiResult<BlogResponseDto> getOne(Long id) {
+    Blog blog = blogRepository.findById(id).orElseThrow(
+            () -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+    BlogResponseDto blogResponseDto = new BlogResponseDto(blog);
+    return new ApiResult<>(blogResponseDto, "조회 성공");
+}
 
     // 게시글 수정
     @Transactional
     public ApiResult<BlogResponseDto> update(Long id, BlogRequestDto requestDto) {
         Blog blog = blogRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
         String message = checkPassword(requestDto, blog, "수정");
         if (message.equals("수정 성공")) {
             blog.update(requestDto);
