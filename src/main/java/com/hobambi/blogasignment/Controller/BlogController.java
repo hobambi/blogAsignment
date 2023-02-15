@@ -48,8 +48,8 @@ public class BlogController {
 
     // 선택한 게시글 삭제
     @DeleteMapping("/api/blogs/{id}")
-    public ApiResult<BlogResponseDto> deleteBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto) {
-        return blogService.deleteBlog(id, requestDto);
+    public ApiResult<BlogResponseDto> deleteBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto,HttpServletRequest request) {
+        return blogService.deleteBlog(id, requestDto, request);
     }
 
 }
