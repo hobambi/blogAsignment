@@ -32,20 +32,8 @@ public class BlogService {
     @Transactional
     public ApiResult<BlogResponseDto> createBlog(BlogRequestDto blogRequestDto, HttpServletRequest request) {
         User user = null;
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
-        if (token != null) {
-            if (jwtUtil.validateToken(token)) {
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new IllegalArgumentException("유효한 토큰이 아닙니다. 당신은 해커입니까???");
-            }
-            user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("당신은 어떻게 유효한 토큰은 있는데 username이 없죠??")
-            );
-        } else {
-            new IllegalArgumentException("당신은 토큰이 없네요ㅠ 로그인하세요");
-        }
+
+        user = checkToken(request, user);
 
         Blog blog = blogRepository.saveAndFlush(new Blog(blogRequestDto, user));
         blogRepository.save(blog);
@@ -80,20 +68,7 @@ public class BlogService {
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
         User user = null;
         String message = "";
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
-        if (token != null) {
-            if (jwtUtil.validateToken(token)) {
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new IllegalArgumentException("유효한 토큰이 아닙니다. headers Authorization 확인해보세요");
-            }
-            user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("유효한 토큰은 있는데 username이 없네요?")
-            );
-        } else {
-            new IllegalArgumentException("당신은 토큰이 없네요ㅠ 로그인하세요");
-        }
+        user = checkToken(request, user);
 
         User find = blog.getUser();
 
@@ -101,15 +76,13 @@ public class BlogService {
             blog.update(blogRequestDto);
             message = "수정 성공";
         }else {
-            message = "원래는 익셉션이 되어야하는데 모르겠네";
+            message = "익셥션 터트리는 걸 모르겠네";
             new Exception("자신의 글만 수정할 수 있습니다");
 
         }
         BlogResponseDto blogResponseDto = new BlogResponseDto(blog);
         return new ApiResult<>(blogResponseDto, message);
-
     }
-
 
     // 게시글 삭제
     @Transactional
@@ -118,6 +91,22 @@ public class BlogService {
                 () -> new IDNotFoundException());
         User user = null;
         String message = "";
+        user = checkToken(request, user);
+
+        User find = blog.getUser();
+
+        if (user.getUsername().equals(find.getUsername())){
+            blogRepository.deleteById(id);
+            message ="삭제 성공";
+        }else {
+            message = "익셉션 터트리는걸 모르겠네";
+            new Exception("자신의 글만 삭제할 수 있습니다");
+        }
+        BlogResponseDto blogResponseDto = new BlogResponseDto(blog);
+        return new ApiResult<>(blogResponseDto, message);
+    }
+
+    private User checkToken(HttpServletRequest request, User user) {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
         if (token != null) {
@@ -132,32 +121,7 @@ public class BlogService {
         } else {
             new IllegalArgumentException("당신은 토큰이 없네요ㅠ 로그인하세요");
         }
-
-        User find = blog.getUser();
-
-        if (user.getUsername().equals(find.getUsername())){
-            blogRepository.deleteById(id);
-            message ="삭제 성공";
-        }else {
-            message = "원래는 익셉션이 되어야하는데 모르겠네";
-            new Exception("자신의 글만 삭제할 수 있습니다");
-        }
-        BlogResponseDto blogResponseDto = new BlogResponseDto(blog);
-        return new ApiResult<>(blogResponseDto, message);
+        return user;
     }
-
-/*
- @Transactional
-    public ApiResult<BlogResponseDto> deleteBlog(Long id, BlogRequestDto requestDto) {
-        Blog blog = blogRepository.findById(id).orElseThrow(
-                () -> new IDNotFoundException());
-        String message = checkPassword(requestDto, blog, "삭제");
-        if (message.equals("삭제 성공")) {
-            blogRepository.deleteById(id);
-        }
-        BlogResponseDto blogResponseDto = new BlogResponseDto(blog);
-        return new ApiResult<>(blogResponseDto, message);
-    }
- */
 
 }
