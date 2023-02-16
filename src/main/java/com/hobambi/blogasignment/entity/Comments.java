@@ -1,13 +1,10 @@
 package com.hobambi.blogasignment.entity;
 
 import com.hobambi.blogasignment.dto.CommentRequestDto;
-import com.hobambi.blogasignment.repository.CommentRepository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Optional;
 
 @Getter
 @Entity

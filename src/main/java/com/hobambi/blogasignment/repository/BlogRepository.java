@@ -5,12 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 // db에서 원하는 정보를 가져옵니다.
 @Repository
 public interface BlogRepository extends JpaRepository<Blog, Long> {
     List<Blog> findAllByOrderByModifiedAtDesc();
-//    List<Blog> findByUsernameOrderByModifiedAtDesc();
 }
 

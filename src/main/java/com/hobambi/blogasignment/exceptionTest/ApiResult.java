@@ -17,7 +17,7 @@ public class ApiResult<T>{
 
     public ApiResult(String message){
         this.message = message;
-        this.result = (T) "삭제 성공";
+        this.result = (T) "성공";
     }
 
 }

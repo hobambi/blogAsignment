@@ -6,21 +6,14 @@ import com.hobambi.blogasignment.exceptionTest.ApiResult;
 import com.hobambi.blogasignment.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.BindException;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class BlogController {
     private final BlogService blogService;
-//
-//    @GetMapping("/")
-//    public ModelAndView home() {
-//        return new ModelAndView("index");
-//    }
 
     // 게시글 작성
     @PostMapping("/api/blogs")
@@ -48,8 +41,8 @@ public class BlogController {
 
     // 선택한 게시글 삭제
     @DeleteMapping("/api/blogs/{id}")
-    public ApiResult<BlogResponseDto> deleteBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto,HttpServletRequest request) {
-        return blogService.deleteBlog(id, requestDto, request);
+    public ApiResult<BlogResponseDto> deleteBlog(@PathVariable Long id,HttpServletRequest request) {
+        return blogService.deleteBlog(id, request);
     }
 
 }

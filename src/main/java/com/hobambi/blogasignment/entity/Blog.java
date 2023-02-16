@@ -30,29 +30,16 @@ public class Blog extends Timestamped {
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "blog")
     private List<Comments> comments = new ArrayList<>();
 
-
-//    public Blog(BlogRequestDto requestDto) {
-//        this.title = requestDto.getTitle();
-////        this.username = requestDto.getUsername();
-//
-//        this.contents = requestDto.getContents();
-//    }
-
     public Blog(BlogRequestDto blogRequestDto, User user) {
         this.title = blogRequestDto.getTitle();
         this.contents = blogRequestDto.getContents();
         this.user = user;
-//        this.username = user.getUsername();
     }
 
     public void update(BlogRequestDto requestDto) {
         this.title = requestDto.getTitle();
-//        this.username = requestDto.getUsername();
-//        this.password = requestDto.getPassword();
+
         this.contents = requestDto.getContents();
     }
 
-//    public String getUsername() {
-//        return user.getUsername();
-//    }
 }
