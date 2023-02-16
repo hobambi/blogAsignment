@@ -1,6 +1,7 @@
 package com.hobambi.blogasignment.dto;
 
 import com.hobambi.blogasignment.entity.Blog;
+import com.hobambi.blogasignment.entity.Comments;
 import com.hobambi.blogasignment.entity.Timestamped;
 import com.hobambi.blogasignment.repository.CommentRepository;
 import lombok.Getter;
@@ -24,13 +25,14 @@ public class BlogResponseDto {
     private List<String> comments;
 
 
-    public BlogResponseDto(Blog blog) {
+    public BlogResponseDto(Blog blog, List<String> comments) {
 //        this.id = blog.getId();
         this.title = blog.getTitle();
         this.contents = blog.getContents();
-//        this.username = blog.getUsername();
+        this.username = blog.getUser().getUsername();
         this.createAt = blog.getCreateAt();
-//        this.contents =
+        this.comments = comments;
+
     }
 
     public BlogResponseDto(Blog blog, String username) {

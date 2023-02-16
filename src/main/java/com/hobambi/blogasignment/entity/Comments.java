@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Optional;
 
 @Getter
@@ -29,6 +30,11 @@ public class Comments extends Timestamped{
     @ManyToOne
     @JoinColumn(name="blogId")
     private Blog blog;
+
+    public String getText(){
+        return comment;
+    }
+
 
     public Comments(CommentRequestDto commentRequestDto, Blog blog) {
         this.comment = commentRequestDto.getComment();

@@ -23,15 +23,13 @@ public class Blog extends Timestamped {
     @Column(nullable = false)
     private String contents;
 
-//    @Column(nullable = false)
-//    private String username;
-
     @ManyToOne
     @JoinColumn(name="userid")
     private User user;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "blog")
     private List<Comments> comments = new ArrayList<>();
+
 
 //    public Blog(BlogRequestDto requestDto) {
 //        this.title = requestDto.getTitle();

@@ -5,6 +5,7 @@ import com.hobambi.blogasignment.dto.BlogResponseDto;
 import com.hobambi.blogasignment.entity.Blog;
 
 
+import com.hobambi.blogasignment.entity.Comments;
 import com.hobambi.blogasignment.entity.User;
 import com.hobambi.blogasignment.exceptionTest.ApiResult;
 import com.hobambi.blogasignment.exceptionTest.IDNotFoundException;
@@ -49,7 +50,9 @@ public class BlogService {
         List<Blog> blogList = blogRepository.findAllByOrderByModifiedAtDesc();
         List<BlogResponseDto> blogResponseDtos = new ArrayList<>();
         for (Blog blog : blogList) {
-            blogResponseDtos.add(new BlogResponseDto(blog));
+            List<String> commentString = getCommentString(blog);
+
+            blogResponseDtos.add(new BlogResponseDto(blog,commentString));//////////////
         }
         return new ApiResult<>(blogResponseDtos, "조회 성공");
     }
@@ -59,8 +62,19 @@ public class BlogService {
     public ApiResult<BlogResponseDto> getOne(Long id) {
         Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-        BlogResponseDto blogResponseDto = new BlogResponseDto(blog);
+
+        List<String> commentString = getCommentString(blog);
+        BlogResponseDto blogResponseDto = new BlogResponseDto(blog,commentString);
         return new ApiResult<>(blogResponseDto, "조회 성공");
+    }
+
+    private List<String> getCommentString(Blog blog) {
+        List<String> commentString = new ArrayList<>();
+        List<Comments> commentsList = commentRepository.findByBlog_Id(blog.getId());
+        for (Comments c : commentsList){
+            commentString.add(c.getText());
+        }
+        return commentString;
     }
 
     // 게시글 수정
@@ -71,7 +85,6 @@ public class BlogService {
         User user = null;
         String message = "";
         user = checkToken(request);
-
         User find = blog.getUser();
 
         if (user.getUsername().equals(find.getUsername())) {
@@ -81,7 +94,9 @@ public class BlogService {
             message = "익셥션 터트리는 걸 모르겠네";
             new Exception("자신의 글만 수정할 수 있습니다");
         }
-        BlogResponseDto blogResponseDto = new BlogResponseDto(blog);
+
+        List<String> commentString = getCommentString(blog);
+        BlogResponseDto blogResponseDto = new BlogResponseDto(blog,commentString);
         return new ApiResult<>(blogResponseDto, message);
     }
 
@@ -93,18 +108,19 @@ public class BlogService {
         User user = null;
         String message = "";
         user = checkToken(request);
-
         User find = blog.getUser();
 
         if (user.getUsername().equals(find.getUsername())) {
+            System.out.println(" =================================삭제 전===============================");
             blogRepository.deleteById(id);
+            System.out.println(" =================================삭제 후===============================");
             message = "삭제 성공";
         } else {
             message = "익셉션 터트리는걸 모르겠네";
             new Exception("자신의 글만 삭제할 수 있습니다");
         }
-        BlogResponseDto blogResponseDto = new BlogResponseDto(blog);
-        return new ApiResult<>(blogResponseDto, message);
+//        BlogResponseDto blogResponseDto = new BlogResponseDto(blog,"sffsf");
+        return new ApiResult<>(message);
     }
 
     private User checkToken(HttpServletRequest request) {
