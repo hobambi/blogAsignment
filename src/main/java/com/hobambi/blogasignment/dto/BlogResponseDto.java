@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
-// db로부터 받은 응답을 넣을 dto
+// 게시글 작성, 수정시 응답을 보내주는 Dto
 @Getter
 @NoArgsConstructor
 public class BlogResponseDto {

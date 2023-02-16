@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+//회원가입과 로그인할 때 요청 하는 Dto 여기서 이름과 비밀번호 유효성 검사를 한다.
 @Setter
 @Getter
 public class UserRequestDto {

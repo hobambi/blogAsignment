@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 @RequiredArgsConstructor
 public class CheckToken {
+    // 올바른 이용자인지 확인하는 메서드가 BlogService와 CommentService, 두 군데 쓰여 따로 빼줌
 
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;

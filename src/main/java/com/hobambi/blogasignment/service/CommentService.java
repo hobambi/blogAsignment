@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 
+// 댓글 서비스인데 댓글 작성 밖에 없음..
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -21,6 +22,7 @@ public class CommentService {
     private final BlogRepository blogRepository;
     private final  CheckToken checkToken;
 
+    // 댓글 작성
     @Transactional
     public ApiResult<CommentResponseDto> createComment(CommentRequestDto requestDto, HttpServletRequest request) {
         User user = checkToken.checkToken(request);

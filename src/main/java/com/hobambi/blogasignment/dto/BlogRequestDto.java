@@ -2,7 +2,7 @@ package com.hobambi.blogasignment.dto;
 
 import lombok.Getter;
 
-// db로 정보를 요청하는 dto
+// 게시글 작성하거나 수정할 때 요청하는 Dto
 @Getter
 public class BlogRequestDto {
    private String username;

@@ -62,15 +62,6 @@ public class BlogService {
         return new ApiResult<>(blogResponseDto, "조회 성공");
     }
 
-    private List<String> getCommentString(Blog blog) {
-        List<String> commentString = new ArrayList<>();
-        List<Comments> commentsList = commentRepository.findByBlog_Id(blog.getId());
-        for (Comments c : commentsList) {
-            commentString.add(c.getText());
-        }
-        return commentString;
-    }
-
     // 게시글 수정
     @Transactional
     public ApiResult<BlogResponseDto> update(Long id, BlogRequestDto blogRequestDto, HttpServletRequest request) {
@@ -113,4 +104,13 @@ public class BlogService {
         return new ApiResult<>(message);
     }
 
+    // 해당 게시글에 있는 댓글 가져오기
+    private List<String> getCommentString(Blog blog) {
+        List<String> commentString = new ArrayList<>();
+        List<Comments> commentsList = commentRepository.findByBlog_Id(blog.getId());
+        for (Comments c : commentsList) {
+            commentString.add(c.getText());
+        }
+        return commentString;
+    }
 }

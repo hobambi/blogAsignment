@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 public class CommentController {
     private final CommentService commentService;
 
+    // 댓글 작성
     @PostMapping
     public ApiResult<CommentResponseDto> createComment(@RequestBody CommentRequestDto requestDto, HttpServletRequest request) {
         return commentService.createComment(requestDto, request);

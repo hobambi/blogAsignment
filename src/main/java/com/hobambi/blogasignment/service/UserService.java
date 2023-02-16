@@ -14,15 +14,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Optional;
 
+// 회원가입, 로그인 서비스(관리자는 따로 없고 모두 일반회원입니다)
 @Service
 @RequiredArgsConstructor
 @Validated
 @Transactional
 public class UserService {
-    private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
+    // 회원가입
     public UserResponseDto signup(@Valid UserRequestDto userRequestDto) {
         String username = userRequestDto.getUsername();
 
@@ -36,6 +37,7 @@ public class UserService {
         return userResponseDto;
     }
 
+    // 로그인
     public UserResponseDto login(UserRequestDto userRequestDto, HttpServletResponse response) {
         String username = userRequestDto.getUsername();
         String password = userRequestDto.getPassword();

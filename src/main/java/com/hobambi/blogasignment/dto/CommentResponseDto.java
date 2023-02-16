@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+// 댓글 작성 후 응답을 받아오는 Dto (request에서 작성자 이름이 추가 되었다)
 @Getter
 public class CommentResponseDto {
     private String username;

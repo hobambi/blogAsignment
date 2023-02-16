@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+// 댓글 테이블 생성
 @Getter
 @Entity
 @NoArgsConstructor
@@ -19,7 +20,7 @@ public class Comments extends Timestamped{
     @Column(nullable = false)
     private String comment;
 
-    //작성자
+    //작성자 - User과의 연관관계를 걸까하다가, 복잡하기도 하고, token에서 바로 username을 가져올 수 있어서 안함
     @Column(nullable = false)
     private String username;
 
@@ -31,7 +32,6 @@ public class Comments extends Timestamped{
     public String getText(){
         return comment;
     }
-
 
     public Comments(CommentRequestDto commentRequestDto, Blog blog) {
         this.comment = commentRequestDto.getComment();

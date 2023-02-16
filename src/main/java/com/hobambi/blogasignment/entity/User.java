@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+// 회원 테이블 생성
 @Getter
 @Entity(name = "users")
 @NoArgsConstructor

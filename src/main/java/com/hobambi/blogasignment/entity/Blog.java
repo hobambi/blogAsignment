@@ -8,12 +8,12 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// db테이블을 만들어요
+// 게시글 테이블 생성
 @Getter
 @Entity
 @NoArgsConstructor
 public class Blog extends Timestamped {
-    @Id // 당신은 pk입니다
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동으로 생성해주세요
     private Long id;
 
@@ -27,6 +27,7 @@ public class Blog extends Timestamped {
     @JoinColumn(name="userid")
     private User user;
 
+    // 게시글 삭제시 해당 게시글에 담긴 댓글도 같이 삭제 해주기 위해 Casecade를 걸어줌
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "blog")
     private List<Comments> comments = new ArrayList<>();
 
@@ -38,7 +39,6 @@ public class Blog extends Timestamped {
 
     public void update(BlogRequestDto requestDto) {
         this.title = requestDto.getTitle();
-
         this.contents = requestDto.getContents();
     }
 
