@@ -2,10 +2,12 @@ package com.hobambi.blogasignment.dto;
 
 import com.hobambi.blogasignment.entity.Blog;
 import com.hobambi.blogasignment.entity.Timestamped;
+import com.hobambi.blogasignment.repository.CommentRepository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 // db로부터 받은 응답을 넣을 dto
 @Getter
@@ -19,6 +21,8 @@ public class BlogResponseDto {
 
     private LocalDateTime createAt;
 
+    private List<String> comments;
+
 
     public BlogResponseDto(Blog blog) {
 //        this.id = blog.getId();
@@ -26,6 +30,7 @@ public class BlogResponseDto {
         this.contents = blog.getContents();
 //        this.username = blog.getUsername();
         this.createAt = blog.getCreateAt();
+//        this.contents =
     }
 
     public BlogResponseDto(Blog blog, String username) {

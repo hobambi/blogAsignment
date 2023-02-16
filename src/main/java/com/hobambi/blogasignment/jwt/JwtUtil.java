@@ -1,7 +1,5 @@
 package com.hobambi.blogasignment.jwt;
 
-
-
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 // db테이블을 만들어요
 @Getter
@@ -12,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Blog extends Timestamped {
     @Id // 당신은 pk입니다
-    @GeneratedValue(strategy = GenerationType.AUTO) // 자동으로 생성해주세요
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동으로 생성해주세요
     private Long id;
 
     @Column(nullable = false)
@@ -28,6 +30,8 @@ public class Blog extends Timestamped {
     @JoinColumn(name="userid")
     private User user;
 
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private List<Comments> comments = new ArrayList<>();
 
 //    public Blog(BlogRequestDto requestDto) {
 //        this.title = requestDto.getTitle();

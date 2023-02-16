@@ -17,13 +17,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Validated
+@Transactional
 public class UserService {
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-
-    @Transactional
     public UserResponseDto signup(@Valid UserRequestDto userRequestDto) {
         String username = userRequestDto.getUsername();
 
@@ -37,7 +36,6 @@ public class UserService {
         return userResponseDto;
     }
 
-    @Transactional
     public UserResponseDto login(UserRequestDto userRequestDto, HttpServletResponse response) {
         String username = userRequestDto.getUsername();
         String password = userRequestDto.getPassword();
