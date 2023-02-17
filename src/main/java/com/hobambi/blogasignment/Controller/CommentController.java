@@ -27,6 +27,9 @@ public class CommentController {
         return commentService.updateComment(blogId,commentId, requestDto, request);
     }
 
-
+    @DeleteMapping("/{blogId}/comment/{commentId}")
+    public ApiResult<CommentResponseDto> deleteComment(@PathVariable Long blogId,@PathVariable Long commentId, HttpServletRequest request) {
+        return commentService.deleteComment(blogId,commentId, request);
+    }
 
 }

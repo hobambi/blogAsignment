@@ -56,4 +56,25 @@ public class CommentService {
         return new ApiResult<>(commentResponseDto,message);
     }
 
+    public ApiResult<CommentResponseDto> deleteComment(Long blogId,Long commentId,HttpServletRequest request) {
+        User user = checkToken.checkToken(request);
+        Blog blog = blogRepository.findById(blogId).orElseThrow(
+                ()-> new IllegalArgumentException("잘못된 접근입니다 : 게시글")
+        );
+        Comments comments = commentRepository.findById(commentId).orElseThrow(
+                ()-> new IllegalArgumentException("잘못된 접근입니다 : 댓글")
+        );
+
+        String message ="";
+        if(user.getUsername().equals(comments.getUsername())){
+            commentRepository.deleteById(commentId);
+            message = "삭제 성공";
+        }else {
+            message = "자신의 댓글만 삭제할 수 있습니다.";
+        }
+        return new ApiResult<>(message);
+    }
+
+
+
 }
