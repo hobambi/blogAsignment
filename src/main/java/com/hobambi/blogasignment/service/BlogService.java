@@ -72,13 +72,13 @@ public class BlogService {
         String message = "";
         User user = checkToken.checkToken(request);
         User find = blog.getUser();
-        if (user.getRole()==USER) {
+        if (user.getRole() == USER) {
             if (user.getUsername().equals(find.getUsername())) {
                 blog.update(blogRequestDto);
                 message = "수정 성공";
             } else {
                 new Exception("아무일도 안하는 익셥션 ㅠㅠ");
-                return new ApiResult<>("자신의 글만 수정할 수 있습니다",true);
+                return new ApiResult<>("자신의 글만 수정할 수 있습니다", true);
             }
         } else {
             blog.update(blogRequestDto);
@@ -98,15 +98,19 @@ public class BlogService {
         User user = checkToken.checkToken(request);
         User find = blog.getUser();
 
-        if (user.getUsername().equals(find.getUsername())) {
-            blogRepository.deleteById(id);
-            return new ApiResult<>("삭제 성공",false);
+        if (user.getRole() == USER) {
+            if (user.getUsername().equals(find.getUsername())) {
+                blogRepository.deleteById(id);
+                return new ApiResult<>("삭제 성공", false);
+            } else {
+
+                new Exception("자신의 글만 삭제할 수 있습니다");
+                return new ApiResult<>("삭제 실패", true);
+            }
         } else {
-
-            new Exception("자신의 글만 삭제할 수 있습니다");
-            return new ApiResult<>("삭제 실패",true);
+            blogRepository.deleteById(id);
+            return new ApiResult<>("삭제 성공", false);
         }
-
     }
 
     // 해당 게시글에 있는 댓글 가져오기
