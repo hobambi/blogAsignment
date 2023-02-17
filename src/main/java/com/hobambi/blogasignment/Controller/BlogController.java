@@ -34,13 +34,13 @@ public class BlogController {
     }
 
     // 선택한 게시글 수정
-    @PutMapping("/api/blogs/{id}")
+    @PutMapping("/api/blog/{id}")
     public ApiResult<BlogResponseDto> updateBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto, HttpServletRequest request) {
         return blogService.update(id, requestDto, request);
     }
 
     // 선택한 게시글 삭제
-    @DeleteMapping("/api/blogs/{id}")
+    @DeleteMapping("/api/blog/{id}")
     public ApiResult<BlogResponseDto> deleteBlog(@PathVariable Long id,HttpServletRequest request) {
         return blogService.deleteBlog(id, request);
     }

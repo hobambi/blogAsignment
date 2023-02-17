@@ -5,22 +5,28 @@ import com.hobambi.blogasignment.dto.CommentResponseDto;
 import com.hobambi.blogasignment.exceptionTest.ApiResult;
 import com.hobambi.blogasignment.service.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/comment")
+@RequestMapping("/api/blog")
 public class CommentController {
     private final CommentService commentService;
 
     // 댓글 작성
-    @PostMapping
-    public ApiResult<CommentResponseDto> createComment(@RequestBody CommentRequestDto requestDto, HttpServletRequest request) {
-        return commentService.createComment(requestDto, request);
+    @PostMapping("/{id}/comment")
+    public ApiResult<CommentResponseDto> createComment(@PathVariable Long id, @RequestBody CommentRequestDto requestDto, HttpServletRequest request) {
+        return commentService.createComment(id, requestDto, request);
     }
+
+    // 댓글 수정
+    @PutMapping("/{blogId}/comment/{commentId}")
+    public ApiResult<CommentResponseDto> updateComment(@PathVariable Long blogId,@PathVariable Long commentId, @RequestBody CommentRequestDto requestDto, HttpServletRequest request) {
+        return commentService.updateComment(blogId,commentId, requestDto, request);
+    }
+
+
+
 }

@@ -38,4 +38,8 @@ public class Comments extends Timestamped{
         this.username = blog.getUser().getUsername();
         this.blog = blog;
     }
+
+    public void update(CommentRequestDto commentRequestDto) {
+        this.comment = commentRequestDto.getComment();
+    }
 }

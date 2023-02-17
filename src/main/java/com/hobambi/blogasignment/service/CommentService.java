@@ -17,16 +17,16 @@ import javax.servlet.http.HttpServletRequest;
 // 댓글 서비스인데 댓글 작성 밖에 없음..
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentService {
     private final CommentRepository commentRepository;
     private final BlogRepository blogRepository;
     private final  CheckToken checkToken;
 
     // 댓글 작성
-    @Transactional
-    public ApiResult<CommentResponseDto> createComment(CommentRequestDto requestDto, HttpServletRequest request) {
+    public ApiResult<CommentResponseDto> createComment(Long id, CommentRequestDto requestDto, HttpServletRequest request) {
         User user = checkToken.checkToken(request);
-        Blog blog = blogRepository.findById(requestDto.getBlogid()).orElseThrow(
+        Blog blog = blogRepository.findById(id).orElseThrow(
                 ()-> new IllegalArgumentException("게시글이 잘 못 되었습니다.")
         );
 
@@ -34,6 +34,26 @@ public class CommentService {
         commentRepository.save(comments);
         CommentResponseDto commentResponseDto = new CommentResponseDto(comments,user.getUsername());
         return new ApiResult<>(commentResponseDto,"댓글 생성");
+    }
+
+    public ApiResult<CommentResponseDto> updateComment(Long blogId,Long commentId, CommentRequestDto requestDto, HttpServletRequest request) {
+        User user = checkToken.checkToken(request);
+        Blog blog = blogRepository.findById(blogId).orElseThrow(
+                ()-> new IllegalArgumentException("잘못된 접근입니다 : 게시글")
+        );
+        Comments comments = commentRepository.findById(commentId).orElseThrow(
+                ()-> new IllegalArgumentException("잘못된 접근입니다 : 댓글")
+        );
+
+        String message ="";
+        if(user.getUsername().equals(comments.getUsername())){
+            comments.update(requestDto);
+            message = "수정 성공";
+        }else {
+            message = "자신의 댓글만 수정할 수 있습니다.";
+        }
+        CommentResponseDto commentResponseDto = new CommentResponseDto(comments,user.getUsername());
+        return new ApiResult<>(commentResponseDto,message);
     }
 
 }

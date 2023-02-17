@@ -18,7 +18,7 @@ public class ApiResult<T>{
     // 게시글 삭제할 때 그냥 성공 여부만 보내면 돼서 사용
     public ApiResult(String message){
         this.message = message;
-        this.result = (T) "성공";
+        this.result = (T) "Status : 200";
     }
 
 }
