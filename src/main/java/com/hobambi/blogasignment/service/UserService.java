@@ -3,6 +3,7 @@ package com.hobambi.blogasignment.service;
 import com.hobambi.blogasignment.dto.UserRequestDto;
 import com.hobambi.blogasignment.dto.UserResponseDto;
 import com.hobambi.blogasignment.entity.User;
+import com.hobambi.blogasignment.entity.UserRoleEnum;
 import com.hobambi.blogasignment.jwt.JwtUtil;
 import com.hobambi.blogasignment.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,8 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+    private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+
 
     // 회원가입
     public UserResponseDto signup(@Valid UserRequestDto userRequestDto) {
@@ -31,7 +34,16 @@ public class UserService {
         if (found.isPresent()) {
             throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
         }
-        User user = new User(userRequestDto);
+        // 사용자 ROLE 확인
+        UserRoleEnum role = UserRoleEnum.USER;
+        if (userRequestDto.isAdmin()) { //관리자 계정으로 가입하려고 하면
+            if (!userRequestDto.getAdminToken().equals(ADMIN_TOKEN)) { // 관리자 토큰 검사
+                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다."); // 다르면 익셥션
+            }
+            role = UserRoleEnum.ADMIN; // 같으면 role = 관리자
+        }
+
+        User user = new User(userRequestDto, role);
         userRepository.save(user);
         UserResponseDto userResponseDto = new UserResponseDto(user);
         return userResponseDto;
@@ -51,7 +63,7 @@ public class UserService {
         if(!user.getPassword().equals(password)){
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER,jwtUtil.createToken(user.getUsername()));
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER,jwtUtil.createToken(user.getUsername(),user.getRole()));
         UserResponseDto userResponseDto = new UserResponseDto(user);
         return userResponseDto;
     }

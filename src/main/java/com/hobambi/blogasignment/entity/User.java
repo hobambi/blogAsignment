@@ -22,8 +22,13 @@ public class User  {
     @Column(nullable = false)
     private String password;
 
-    public User(UserRequestDto userRequestDto) {
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
+
+    public User(UserRequestDto userRequestDto, UserRoleEnum role) {
         this.username = userRequestDto.getUsername();
         this.password = userRequestDto.getPassword();
+        this.role = role;
     }
 }

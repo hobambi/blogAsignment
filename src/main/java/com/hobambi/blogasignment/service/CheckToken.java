@@ -19,19 +19,19 @@ public class CheckToken {
     User checkToken(HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
-        User user1 = null;
+        User user = null;
         if (token != null) {
             if (jwtUtil.validateToken(token)) {
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
                 throw new IllegalArgumentException("유효한 토큰이 아닙니다. headers Authorization 확인해보세요");
             }
-            user1 = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("감사합니다!")
+            user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("유효한 토큰인데 username이 없네요.")
             );
         } else {
             new IllegalArgumentException("당신은 토큰이 없네요ㅠ 로그인하세요");
         }
-        return user1;
+        return user;
     }
 }
