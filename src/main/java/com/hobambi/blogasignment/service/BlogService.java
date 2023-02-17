@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hobambi.blogasignment.entity.UserRoleEnum.USER;
+
 @Service
 @RequiredArgsConstructor
 public class BlogService {
@@ -70,13 +72,16 @@ public class BlogService {
         String message = "";
         User user = checkToken.checkToken(request);
         User find = blog.getUser();
-
-        if (user.getUsername().equals(find.getUsername())) {
-            blog.update(blogRequestDto);
-            message = "수정 성공";
+        if (user.getRole()==USER) {
+            if (user.getUsername().equals(find.getUsername())) {
+                blog.update(blogRequestDto);
+                message = "수정 성공";
+            } else {
+                new Exception("아무일도 안하는 익셥션 ㅠㅠ");
+                return new ApiResult<>("자신의 글만 수정할 수 있습니다",true);
+            }
         } else {
-            message = "익셥션 터트리는 걸 모르겠네";
-            new Exception("자신의 글만 수정할 수 있습니다");
+            blog.update(blogRequestDto);
         }
 
         List<String> commentString = getCommentString(blog);
@@ -90,18 +95,18 @@ public class BlogService {
         Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new IDNotFoundException());
 
-        String message = "";
         User user = checkToken.checkToken(request);
         User find = blog.getUser();
 
         if (user.getUsername().equals(find.getUsername())) {
             blogRepository.deleteById(id);
-            message = "삭제 성공";
+            return new ApiResult<>("삭제 성공",false);
         } else {
-            message = "익셉션 터트리는걸 모르겠네";
+
             new Exception("자신의 글만 삭제할 수 있습니다");
+            return new ApiResult<>("삭제 실패",true);
         }
-        return new ApiResult<>(message);
+
     }
 
     // 해당 게시글에 있는 댓글 가져오기

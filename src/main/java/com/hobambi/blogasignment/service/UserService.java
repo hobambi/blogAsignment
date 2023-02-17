@@ -38,7 +38,7 @@ public class UserService {
         UserRoleEnum role = UserRoleEnum.USER;
         if (userRequestDto.isAdmin()) { //관리자 계정으로 가입하려고 하면
             if (!userRequestDto.getAdminToken().equals(ADMIN_TOKEN)) { // 관리자 토큰 검사
-                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다."); // 다르면 익셥션
+                throw new IllegalArgumentException("관리자 암호가 틀렸습니다."); // 다르면 익셥션
             }
             role = UserRoleEnum.ADMIN; // 같으면 role = 관리자
         }

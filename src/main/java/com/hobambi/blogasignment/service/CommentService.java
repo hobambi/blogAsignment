@@ -65,14 +65,12 @@ public class CommentService {
                 ()-> new IllegalArgumentException("잘못된 접근입니다 : 댓글")
         );
 
-        String message ="";
         if(user.getUsername().equals(comments.getUsername())){
             commentRepository.deleteById(commentId);
-            message = "삭제 성공";
+            return new ApiResult<>("삭제 성공",false);
         }else {
-            message = "자신의 댓글만 삭제할 수 있습니다.";
+            return new ApiResult<>("삭제 실패",true);
         }
-        return new ApiResult<>(message);
     }
 
 

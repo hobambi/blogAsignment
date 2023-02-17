@@ -6,7 +6,7 @@ import lombok.Setter;
 // 결과를 포맷에 넣어줍니다
 @Getter
 @Setter
-public class ApiResult<T>{
+public class ApiResult<T> {
     private final T result;
     private final String message;
 
@@ -16,9 +16,12 @@ public class ApiResult<T>{
     }
 
     // 게시글 삭제할 때 그냥 성공 여부만 보내면 돼서 사용
-    public ApiResult(String message){
+    public ApiResult(String message, boolean error) {
         this.message = message;
-        this.result = (T) "Status : 200";
+        if (error)
+            this.result = (T) "status : 400";
+        else
+            this.result = (T) "status : 200";
     }
 
 }
