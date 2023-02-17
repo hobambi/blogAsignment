@@ -18,7 +18,7 @@ public class UserRequestDto {
     private String username;
 
     @Size(min=8,max=15)
-    @Pattern(regexp = "^[A-Za-z0-9]*$")
+    @Pattern(regexp = "^[A-Za-z0-9!@#$%^&*(),.?\\\":{}|<>]*$")
     @NotNull(message = "비밀번호를 입력해주세요.")
     private String password;
 }
