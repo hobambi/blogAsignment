@@ -17,4 +17,10 @@ public class CommentResponseDto {
         this.comments = comments.getComment();
         this.createAt = comments.getCreateAt();
     }
+
+    public CommentResponseDto(Comments comments){
+        this.username = comments.getUsername();
+        this.comments = comments.getComment();
+        this.createAt = comments.getCreateAt();
+    }
 }

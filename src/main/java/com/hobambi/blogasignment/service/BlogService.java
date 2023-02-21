@@ -2,6 +2,7 @@ package com.hobambi.blogasignment.service;
 
 import com.hobambi.blogasignment.dto.BlogRequestDto;
 import com.hobambi.blogasignment.dto.BlogResponseDto;
+import com.hobambi.blogasignment.dto.CommentResponseDto;
 import com.hobambi.blogasignment.entity.Blog;
 
 
@@ -46,7 +47,7 @@ public class BlogService {
         List<Blog> blogList = blogRepository.findAllByOrderByModifiedAtDesc();
         List<BlogResponseDto> blogResponseDtos = new ArrayList<>();
         for (Blog blog : blogList) {
-            List<String> commentString = getCommentString(blog);
+            List<CommentResponseDto> commentString = getCommentDto(blog);
 
             blogResponseDtos.add(new BlogResponseDto(blog, commentString));
         }
@@ -59,7 +60,7 @@ public class BlogService {
         Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
-        List<String> commentString = getCommentString(blog);
+        List<CommentResponseDto> commentString = getCommentDto(blog);
         BlogResponseDto blogResponseDto = new BlogResponseDto(blog, commentString);
         return new ApiResult<>(blogResponseDto, "조회 성공");
     }
@@ -84,7 +85,7 @@ public class BlogService {
             blog.update(blogRequestDto);
         }
 
-        List<String> commentString = getCommentString(blog);
+        List<CommentResponseDto> commentString = getCommentDto(blog);
         BlogResponseDto blogResponseDto = new BlogResponseDto(blog, commentString);
         return new ApiResult<>(blogResponseDto, message);
     }
@@ -114,12 +115,22 @@ public class BlogService {
     }
 
     // 해당 게시글에 있는 댓글 가져오기
-    private List<String> getCommentString(Blog blog) {
-        List<String> commentString = new ArrayList<>();
+    private List<CommentResponseDto> getCommentDto(Blog blog) {
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
         List<Comments> commentsList = commentRepository.findByBlog_Id(blog.getId());
         for (Comments c : commentsList) {
-            commentString.add(c.getText());
+            CommentResponseDto temp = new CommentResponseDto(c);
+            commentResponseDtoList.add(temp);
         }
-        return commentString;
+        return commentResponseDtoList;
     }
+
+//    private List<String> getCommentString(Blog blog) {
+//        List<String> commentString = new ArrayList<>();
+//        List<Comments> commentsList = commentRepository.findByBlog_Id(blog.getId());
+//        for (Comments c : commentsList) {
+//            commentString.add(c.getText());
+//        }
+//        return commentString;
+//    }
 }

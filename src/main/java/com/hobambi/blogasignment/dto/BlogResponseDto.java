@@ -16,10 +16,10 @@ public class BlogResponseDto {
     private String title;
     private String contents;
     private LocalDateTime createAt;
-    private List<String> comments;
+    private List<CommentResponseDto> comments; //commentDto로 바꿔
 
 
-    public BlogResponseDto(Blog blog, List<String> comments) {
+    public BlogResponseDto(Blog blog, List<CommentResponseDto> comments) {
         this.title = blog.getTitle();
         this.contents = blog.getContents();
         this.username = blog.getUser().getUsername();
