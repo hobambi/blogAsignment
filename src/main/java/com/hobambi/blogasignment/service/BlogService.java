@@ -12,6 +12,7 @@ import com.hobambi.blogasignment.exceptionTest.ApiResult;
 import com.hobambi.blogasignment.exceptionTest.IDNotFoundException;
 import com.hobambi.blogasignment.repository.BlogRepository;
 import com.hobambi.blogasignment.repository.CommentRepository;
+import com.hobambi.blogasignment.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,11 +30,10 @@ public class BlogService {
     private final CommentRepository commentRepository;
     private final CheckToken checkToken;
 
+
     // 게시글 작성
     @Transactional
-    public ApiResult<BlogResponseDto> createBlog(BlogRequestDto blogRequestDto, HttpServletRequest request) {
-
-        User user = checkToken.checkToken(request);
+    public ApiResult<BlogResponseDto> createBlog(BlogRequestDto blogRequestDto, User user) {
 
         Blog blog = blogRepository.saveAndFlush(new Blog(blogRequestDto, user));
         blogRepository.save(blog);
@@ -56,7 +56,7 @@ public class BlogService {
 
     // 선택한 게시글 조회
     @Transactional(readOnly = true)
-    public ApiResult<BlogResponseDto> getOne(Long id) {
+    public ApiResult<BlogResponseDto> getBlog(Long id) {
         Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
@@ -125,12 +125,4 @@ public class BlogService {
         return commentResponseDtoList;
     }
 
-//    private List<String> getCommentString(Blog blog) {
-//        List<String> commentString = new ArrayList<>();
-//        List<Comments> commentsList = commentRepository.findByBlog_Id(blog.getId());
-//        for (Comments c : commentsList) {
-//            commentString.add(c.getText());
-//        }
-//        return commentString;
-//    }
 }

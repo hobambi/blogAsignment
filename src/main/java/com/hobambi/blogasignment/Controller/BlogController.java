@@ -3,8 +3,10 @@ package com.hobambi.blogasignment.Controller;
 import com.hobambi.blogasignment.dto.BlogRequestDto;
 import com.hobambi.blogasignment.dto.BlogResponseDto;
 import com.hobambi.blogasignment.exceptionTest.ApiResult;
+import com.hobambi.blogasignment.security.UserDetailsImpl;
 import com.hobambi.blogasignment.service.BlogService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +19,8 @@ public class BlogController {
 
     // 게시글 작성
     @PostMapping("/api/blogs")
-    public ApiResult<BlogResponseDto> createBlog(@RequestBody BlogRequestDto requestDto, HttpServletRequest request) {
-        return blogService.createBlog(requestDto,request);
+    public ApiResult<BlogResponseDto> createBlog(@RequestBody BlogRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return blogService.createBlog(requestDto,userDetails.getUser());
     }
 
     // 전체 게시글 목록 조회
@@ -29,8 +31,8 @@ public class BlogController {
 
     // 선택한 게시글 조회
     @GetMapping("/api/blog/{id}")
-    public ApiResult<BlogResponseDto> getOne(@PathVariable Long id) {
-        return blogService.getOne(id);
+    public ApiResult<BlogResponseDto> getBlog(@PathVariable Long id) {
+        return blogService.getBlog(id);
     }
 
     // 선택한 게시글 수정
