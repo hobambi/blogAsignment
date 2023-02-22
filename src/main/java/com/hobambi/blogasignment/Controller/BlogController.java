@@ -37,14 +37,14 @@ public class BlogController {
 
     // 선택한 게시글 수정
     @PutMapping("/api/blog/{id}")
-    public ApiResult<BlogResponseDto> updateBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto, HttpServletRequest request) {
-        return blogService.update(id, requestDto, request);
+    public ApiResult<BlogResponseDto> updateBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return blogService.update(id, requestDto, userDetails.getUser());
     }
 
     // 선택한 게시글 삭제
     @DeleteMapping("/api/blog/{id}")
-    public ApiResult<BlogResponseDto> deleteBlog(@PathVariable Long id,HttpServletRequest request) {
-        return blogService.deleteBlog(id, request);
+    public ApiResult<BlogResponseDto> deleteBlog(@PathVariable Long id,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return blogService.deleteBlog(id, userDetails.getUser());
     }
 
 }

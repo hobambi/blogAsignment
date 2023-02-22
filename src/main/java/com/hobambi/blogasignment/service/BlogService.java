@@ -28,7 +28,6 @@ import static com.hobambi.blogasignment.entity.UserRoleEnum.USER;
 public class BlogService {
     private final BlogRepository blogRepository;
     private final CommentRepository commentRepository;
-    private final CheckToken checkToken;
 
 
     // 게시글 작성
@@ -67,11 +66,10 @@ public class BlogService {
 
     // 게시글 수정
     @Transactional
-    public ApiResult<BlogResponseDto> update(Long id, BlogRequestDto blogRequestDto, HttpServletRequest request) {
+    public ApiResult<BlogResponseDto> update(Long id, BlogRequestDto blogRequestDto,User user ) {
         Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
         String message = "";
-        User user = checkToken.checkToken(request);
         User find = blog.getUser();
         if (user.getRole() == USER) {
             if (user.getUsername().equals(find.getUsername())) {
@@ -92,11 +90,11 @@ public class BlogService {
 
     // 게시글 삭제
     @Transactional
-    public ApiResult<BlogResponseDto> deleteBlog(Long id, HttpServletRequest request) {
+    public ApiResult<BlogResponseDto> deleteBlog(Long id, User user) {
         Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new IDNotFoundException());
 
-        User user = checkToken.checkToken(request);
+//        User user = checkToken.checkToken(request);
         User find = blog.getUser();
 
         if (user.getRole() == USER) {

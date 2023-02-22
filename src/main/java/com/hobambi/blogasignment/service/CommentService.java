@@ -8,6 +8,7 @@ import com.hobambi.blogasignment.entity.User;
 import com.hobambi.blogasignment.exceptionTest.ApiResult;
 import com.hobambi.blogasignment.repository.BlogRepository;
 import com.hobambi.blogasignment.repository.CommentRepository;
+import com.hobambi.blogasignment.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,18 +17,16 @@ import javax.servlet.http.HttpServletRequest;
 
 import static com.hobambi.blogasignment.entity.UserRoleEnum.USER;
 
-// 댓글 서비스인데 댓글 작성 밖에 없음..
+// 댓글 서비스
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class CommentService {
     private final CommentRepository commentRepository;
     private final BlogRepository blogRepository;
-    private final CheckToken checkToken;
 
     // 댓글 작성
-    public ApiResult<CommentResponseDto> createComment(Long id, CommentRequestDto requestDto, HttpServletRequest request) {
-        User user = checkToken.checkToken(request);
+    public ApiResult<CommentResponseDto> createComment(Long id, CommentRequestDto requestDto, User user) {
         Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("없는 게시글입니다.")
         );
@@ -39,8 +38,7 @@ public class CommentService {
     }
 
     // 댓글 수정
-    public ApiResult<CommentResponseDto> updateComment(Long blogId, Long commentId, CommentRequestDto requestDto, HttpServletRequest request) {
-        User user = checkToken.checkToken(request);
+    public ApiResult<CommentResponseDto> updateComment(Long blogId, Long commentId, CommentRequestDto requestDto, User user) {
         Blog blog = blogRepository.findById(blogId).orElseThrow(
                 () -> new IllegalArgumentException("없는 게시글입니다.")
         );
@@ -66,8 +64,7 @@ public class CommentService {
     }
 
     //댓글 삭제
-    public ApiResult<CommentResponseDto> deleteComment(Long blogId, Long commentId, HttpServletRequest request) {
-        User user = checkToken.checkToken(request);
+    public ApiResult<CommentResponseDto> deleteComment(Long blogId, Long commentId, User user) {
         Blog blog = blogRepository.findById(blogId).orElseThrow(
                 () -> new IllegalArgumentException("없는 게시글입니다.")
         );

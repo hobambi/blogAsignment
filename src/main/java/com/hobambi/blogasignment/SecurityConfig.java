@@ -47,16 +47,13 @@ public class SecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-                .antMatchers(HttpMethod.GET,"/api/blog").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/blog/{id}").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/blogs").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/user/signup").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/user/login").permitAll()
                 .anyRequest().authenticated()
                 // JWT 인증/인가를 사용하기 위한 설정
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-
-        // 로그인 사용
-//        http.formLogin().loginPage("/api/user/login").permitAll();
 
         return http.build();
     }
