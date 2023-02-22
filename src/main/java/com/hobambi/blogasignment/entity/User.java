@@ -28,7 +28,10 @@ public class User  {
 
     public User(UserRequestDto userRequestDto, UserRoleEnum role) {
         this.username = userRequestDto.getUsername();
-        this.password = userRequestDto.getPassword();
         this.role = role;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

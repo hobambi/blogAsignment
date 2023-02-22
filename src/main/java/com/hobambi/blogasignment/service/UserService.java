@@ -7,6 +7,7 @@ import com.hobambi.blogasignment.entity.UserRoleEnum;
 import com.hobambi.blogasignment.jwt.JwtUtil;
 import com.hobambi.blogasignment.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -24,11 +25,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+    private final PasswordEncoder passwordEncoder;
 
 
     // 회원가입
     public UserResponseDto signup(@Valid UserRequestDto userRequestDto) {
         String username = userRequestDto.getUsername();
+        String password = passwordEncoder.encode(userRequestDto.getPassword()); //
 
        Optional<User> found = userRepository.findByUsername(username);
         if (found.isPresent()) {
@@ -44,6 +47,7 @@ public class UserService {
         }
 
         User user = new User(userRequestDto, role);
+        user.setPassword(password);
         userRepository.save(user);
         UserResponseDto userResponseDto = new UserResponseDto(user);
         return userResponseDto;
@@ -60,7 +64,7 @@ public class UserService {
         ));
 
         //password 확인
-        if(!user.getPassword().equals(password)){
+        if(!passwordEncoder.matches(password,user.getPassword())){
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER,jwtUtil.createToken(user.getUsername(),user.getRole()));
