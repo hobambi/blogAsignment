@@ -8,6 +8,7 @@ import com.hobambi.blogasignment.entity.Blog;
 
 import com.hobambi.blogasignment.entity.Comments;
 import com.hobambi.blogasignment.entity.User;
+import com.hobambi.blogasignment.exception.CustomException;
 import com.hobambi.blogasignment.exceptionTest.ApiResult;
 import com.hobambi.blogasignment.exceptionTest.IDNotFoundException;
 import com.hobambi.blogasignment.repository.BlogRepository;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.hobambi.blogasignment.entity.UserRoleEnum.USER;
+import static com.hobambi.blogasignment.exception.ErrorCode.FORBIDDEN_DATA;
+import static com.hobambi.blogasignment.exception.ErrorCode.NOT_FOUND_DATA;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +38,6 @@ public class BlogService {
     public ApiResult<BlogResponseDto> createBlog(BlogRequestDto blogRequestDto, User user) {
 
         Blog blog = blogRepository.saveAndFlush(new Blog(blogRequestDto, user));
-        blogRepository.save(blog);
         BlogResponseDto blogResponseDto = new BlogResponseDto(blog, user.getUsername());
         return new ApiResult<>(blogResponseDto, "게시글 성공");
     }
@@ -46,8 +48,8 @@ public class BlogService {
         List<Blog> blogList = blogRepository.findAllByOrderByModifiedAtDesc();
         List<BlogResponseDto> blogResponseDtos = new ArrayList<>();
         for (Blog blog : blogList) {
-            List<CommentResponseDto> commentString = getCommentDto(blog);
 
+            List<CommentResponseDto> commentString = getCommentDto(blog);
             blogResponseDtos.add(new BlogResponseDto(blog, commentString));
         }
         return new ApiResult<>(blogResponseDtos, "조회 성공");
@@ -57,7 +59,7 @@ public class BlogService {
     @Transactional(readOnly = true)
     public ApiResult<BlogResponseDto> getBlog(Long id) {
         Blog blog = blogRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+                () -> new CustomException(NOT_FOUND_DATA));
 
         List<CommentResponseDto> commentString = getCommentDto(blog);
         BlogResponseDto blogResponseDto = new BlogResponseDto(blog, commentString);
@@ -66,9 +68,9 @@ public class BlogService {
 
     // 게시글 수정
     @Transactional
-    public ApiResult<BlogResponseDto> update(Long id, BlogRequestDto blogRequestDto,User user ) {
+    public ApiResult<BlogResponseDto> update(Long id, BlogRequestDto blogRequestDto, User user) {
         Blog blog = blogRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+                () -> new CustomException(NOT_FOUND_DATA));
         String message = "";
         User find = blog.getUser();
         if (user.getRole() == USER) {
@@ -76,8 +78,7 @@ public class BlogService {
                 blog.update(blogRequestDto);
                 message = "수정 성공";
             } else {
-                new Exception("아무일도 안하는 익셥션 ㅠㅠ");
-                return new ApiResult<>("자신의 글만 수정할 수 있습니다", true);
+                throw new CustomException(FORBIDDEN_DATA);
             }
         } else {
             blog.update(blogRequestDto);
@@ -92,21 +93,18 @@ public class BlogService {
     @Transactional
     public ApiResult<BlogResponseDto> deleteBlog(Long id, User user) {
         Blog blog = blogRepository.findById(id).orElseThrow(
-                () -> new IDNotFoundException());
+                () -> new CustomException(NOT_FOUND_DATA));
 
-//        User user = checkToken.checkToken(request);
         User find = blog.getUser();
 
-        if (user.getRole() == USER) {
+        if (user.getRole() == USER) { // USER일때
             if (user.getUsername().equals(find.getUsername())) {
                 blogRepository.deleteById(id);
                 return new ApiResult<>("삭제 성공", false);
             } else {
-
-                new Exception("자신의 글만 삭제할 수 있습니다");
-                return new ApiResult<>("삭제 실패", true);
+                throw new CustomException(FORBIDDEN_DATA);
             }
-        } else {
+        } else { //ADMIN 일때
             blogRepository.deleteById(id);
             return new ApiResult<>("삭제 성공", false);
         }

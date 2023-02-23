@@ -28,14 +28,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = jwtUtil.resolveToken(request);
 
-        if(token != null) {
+        if(token!=null) {
             if(!jwtUtil.validateToken(token)){
-                jwtExceptionHandler(response, "Token Error", HttpStatus.UNAUTHORIZED.value());
+                jwtExceptionHandler(response, "Invalidate Token", HttpStatus.UNAUTHORIZED.value());
                 return;
             }
             Claims info = jwtUtil.getUserInfoFromToken(token);
             setAuthentication(info.getSubject());
         }
+        //null일때 막으면 회원가입이 안되고, 안 막으면 token이 null일때 아무일도 안 일어남
         filterChain.doFilter(request,response);
     }
 

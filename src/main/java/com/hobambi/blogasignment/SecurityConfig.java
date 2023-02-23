@@ -45,7 +45,6 @@ public class SecurityConfig {
 
         // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET,"/api/blog/{id}").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/blogs").permitAll()

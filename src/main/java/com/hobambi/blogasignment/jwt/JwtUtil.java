@@ -80,6 +80,7 @@ public class JwtUtil {
         } catch (IllegalArgumentException e) {
             log.info("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
         }
+
         return false;
     }
 
